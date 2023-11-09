@@ -16,12 +16,6 @@ RUN chmod +x /usr/local/bin/install-php-extensions && \
 RUN curl -sSk https://getcomposer.org/installer | php -- --disable-tls && \
    mv composer.phar /usr/local/bin/composer
 
-# Installation du CLI Symfony
-RUN apt-get update && \
-    apt-get install -y wget && \
-    curl -sS https://get.symfony.com/cli/installer | bash && \
-    mv /root/.symfony5/bin/symfony /usr/local/bin/symfony
-
 #Installation de nodejs et yarn
 RUN apt update && apt install -yqq nodejs yarn
 
@@ -38,6 +32,9 @@ RUN cd /var/www && \
 
 # Définition du répertoire de travail (/var/www/ au lieu de /var/www/html/)
 WORKDIR /var/www/
+
+# Exécuter les commandes Symfony pour initialiser l'api (situées dans init_symfony.sh)
+ENTRYPOINT ["bash", "./docker/init_symfony.sh"]
 
 # Enfin, on expose le port apache (80) vers l'extérieur du container
 EXPOSE 80
