@@ -13,7 +13,9 @@ services:
 
   # Learnaudit-api
   app:
-    image: learnaudit-api:latest
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
     depends_on:
       - database
     restart: unless-stopped

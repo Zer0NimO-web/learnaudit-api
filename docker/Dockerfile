@@ -1,6 +1,12 @@
 # Image de départ
 FROM php:8.2-apache
 
+# Installation des utilitaires pour la gestion des archives ZIP
+RUN apt-get update && \
+    apt-get install -y unzip && \
+    apt-get install -y libzip-dev && \
+    docker-php-ext-install zip
+
 # Installation des extensions php (pdo_pgsql, intl)
 ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
 RUN chmod +x /usr/local/bin/install-php-extensions && \
@@ -26,6 +32,7 @@ COPY . /var/www/
 COPY ./docker/apache-symfony.conf /etc/apache2/sites-available/000-default.conf
 
 # Installation des dépendances (composer)
+ENV COMPOSER_ALLOW_SUPERUSER=1
 RUN cd /var/www && \
     composer install
 
